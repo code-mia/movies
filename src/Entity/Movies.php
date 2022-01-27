@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\MoviesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=MoviesRepository::class)
@@ -19,13 +21,15 @@ class Movies
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
-    private $nom;
+    private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
      */
-    private $description;
+    private $plot;
 
     /**
      * @ORM\Column(type="float")
@@ -37,31 +41,36 @@ class Movies
      */
     private $votersNumber;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getPlot(): ?string
     {
-        return $this->description;
+        return $this->plot;
     }
 
-    public function setDescription(string $description): self
+    public function setPlot(string $plot): self
     {
-        $this->description = $description;
+        $this->plot = $plot;
 
         return $this;
     }
@@ -86,6 +95,18 @@ class Movies
     public function setVotersNumber(int $votersNumber): self
     {
         $this->votersNumber = $votersNumber;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }
