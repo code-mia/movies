@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
+use App\Form\MassImportType;
+use SimpleXLSX;
 class FilmController extends AbstractController
 {
 
@@ -198,10 +200,46 @@ class FilmController extends AbstractController
     /**
      * @Route("/import", name="importer")
      */
-    public function importMovie(): Response
+    public function importMovie(Request $request,EntityManagerInterface $entityManager): Response
     {
+        
+        $form = $this->createForm(MassImportType::class);
+
+        $form->handleRequest($request);
+        $erreur = "";
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $xclFile = $form->get('fichier_xcl')->getData();
+            $xclFile = $xclFile->getRealPath();
+
+
+            $em = $this->getDoctrine()->getManager();
+
+
+
+            if ( $xlsx = SimpleXLSX::parse($xclFile) ) {
+
+                foreach( $xlsx->rows() as $key=> $r ) {
+                    $Film= new Movies();
+
+                    $Film->setName($r[1]);
+                    $Film->setPlot($r[2]);
+                    $Film->setScore((int)$r[3]);
+                    $Film->setVotersNumber((int)$r[4]);
+                }
+                $em->persist($Film);
+                $em->flush();
+
+            } else {
+                echo SimpleXLSX::parseError();
+                return $this->redirectToRoute('movie_new', ['erreur'=>"impossible de récupérer les données"], Response::HTTP_SEE_OTHER);
+            }
+        }
+
         return $this->render('film/import.html.twig', [
-            'controller_name' => 'FilmController',
+            'erreur'=>$erreur,
+            'form' => $form->createView(),
         ]);
     }
         /**

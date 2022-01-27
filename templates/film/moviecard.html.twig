@@ -16,15 +16,17 @@
     <h1>{{ movie.votersNumber }}</h1></div>
     <div class="flex">
     {{form_start(form)}}
-    {{form_start(formModify)}}
+    
     {{form_widget(form.score)}}
     {{form_widget(form.vote)}}
+    {{form_end(form)}}
+    {{form_start(formModify)}}
     {{form_widget(formModify.password)}}
     {{form_widget(formModify.delete)}}
     
     
     {{form_end(formModify)}}
-    {{form_end(form)}}
+    
     </div> 
     </div>
 

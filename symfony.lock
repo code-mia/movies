@@ -231,6 +231,9 @@
             "./config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "shuchkin/simplexlsx": {
+        "version": "0.8.33"
+    },
     "symfony/asset": {
         "version": "v5.4.0"
     },
